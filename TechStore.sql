@@ -82,3 +82,70 @@ SELECT * FROM clientes;
 SELECT * FROM productos;
 SELECT * FROM ventas;
 
+--ENTREGA NUMERO 4--
+--Primera consulta, Resumen ejecutivo mensual--
+SELECT
+    EXTRACT(MONTH FROM fecha_venta) AS mes,
+    SUM(cantidad * precio_unitario) AS total_facturado,
+    COUNT(*) AS cantidad_pedidos,
+    AVG(cantidad * precio_unitario) AS ticket_promedio
+FROM ventas
+GROUP BY EXTRACT(MONTH FROM fecha_venta);
+
+--Segunda consulta, Ranking de productos--
+SELECT
+    id_producto,
+    SUM(cantidad) AS unidades_vendidas,
+    SUM(cantidad * precio_unitario) AS total_facturado
+FROM ventas
+GROUP BY id_producto
+ORDER BY total_facturado DESC
+LIMIT 5;
+
+--Tercer consulta, Clientes recurrentes--
+SELECT
+    id_cliente,
+    COUNT(*) AS cantidad_pedidos,
+    SUM(cantidad * precio_unitario) AS total_gastado
+FROM ventas
+GROUP BY id_cliente
+HAVING COUNT(*) > 1;
+
+--Cuarta consulta, Meses por encima/por debajo del promedio --
+SELECT
+    mes,
+    total_facturado,
+    CASE
+        WHEN total_facturado > (
+            SELECT AVG(total_facturado)
+            FROM (
+                SELECT
+                    EXTRACT(MONTH FROM fecha_venta) AS mes,
+                    SUM(cantidad * precio_unitario) AS total_facturado
+                FROM ventas
+                GROUP BY EXTRACT(MONTH FROM fecha_venta)
+            ) AS resumen_mensual
+        )
+        THEN 'Por encima'
+        ELSE 'Por debajo'
+    END AS comparacion
+FROM (
+    SELECT
+        EXTRACT(MONTH FROM fecha_venta) AS mes,
+        SUM(cantidad * precio_unitario) AS total_facturado
+    FROM ventas
+    GROUP BY EXTRACT(MONTH FROM fecha_venta)
+) AS resumen_mensual;
+
+
+-- HALLAZGOS DEL ANÁLISIS
+-- 1. El producto 1 fue el producto con mayor facturación,
+--    generando un total de $3.600.
+
+-- 2. Los cinco clientes realizaron más de un pedido,
+--    por lo que todos son considerados clientes recurrentes
+--    según el criterio establecido en la consulta 3.
+
+-- 3. El dataset contiene ventas correspondientes únicamente
+--    al mes de marzo de 2024, por lo que la comparación
+--    entre meses está limitada a un único período.
