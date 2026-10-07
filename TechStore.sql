@@ -149,3 +149,55 @@ FROM (
 -- 3. El dataset contiene ventas correspondientes únicamente
 --    al mes de marzo de 2024, por lo que la comparación
 --    entre meses está limitada a un único período.
+
+--ENTREGA NUMERO 5
+--Consulta 1 — Vista base del proyecto (INNER JOIN)
+SELECT
+    ventas.fecha_venta,
+    ventas.id_cliente,
+    clientes.nombre
+FROM ventas
+INNER JOIN clientes
+    ON ventas.id_cliente = clientes.id_cliente;
+
+--Consulta 2 — Clientes sin ventas (LEFT JOIN)
+SELECT
+    clientes.nombre,
+    clientes.email,
+    clientes.fecha_registro 
+FROM clientes
+LEFT JOIN ventas
+    ON clientes.id_cliente = ventas.id_cliente
+WHERE ventas.id_venta IS NULL;
+
+--Consulta 3 — Productos sin ventas (LEFT JOIN)
+SELECT 
+    productos.nombre_producto,
+    productos.precio,
+    categorias.nombre_categoria
+FROM productos
+LEFT JOIN categorias
+    ON productos.id_categoria = categorias.id_categoria
+LEFT JOIN ventas
+    ON productos.id_producto = ventas.id_producto
+WHERE ventas.id_venta IS NULL;
+
+--Consulta 4 — (UNION ALL)
+SELECT *
+FROM (
+    SELECT
+        fecha_venta,
+        cantidad * precio_unitario AS total,
+        'Primera quincena' AS canal
+    FROM ventas
+    WHERE fecha_venta <= '2024-03-15'
+
+    UNION ALL
+
+    SELECT
+        fecha_venta,
+        cantidad * precio_unitario AS total,
+        'Segunda quincena' AS canal
+    FROM ventas
+    WHERE fecha_venta > '2024-03-15'
+) AS consolidado;
