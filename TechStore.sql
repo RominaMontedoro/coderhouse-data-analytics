@@ -1,4 +1,4 @@
---ENTREGA NUMERO 3--
+/*--ENTREGA NUMERO 3--
 --NO SE SI ENTENDI BIEN, SI DEBIA CREAR LAS TABLAS DE LA CONSIGNA NOMAS O CREAR LAS TABLAS DE LA ENTREGA 2--
 --DROP TABLES-- 
 DROP TABLE IF EXISTS ventas;
@@ -148,7 +148,7 @@ FROM (
 
 -- 3. El dataset contiene ventas correspondientes únicamente
 --    al mes de marzo de 2024, por lo que la comparación
---    entre meses está limitada a un único período.
+--    entre meses está limitada a un único período.*/
 
 --ENTREGA NUMERO 5
 --Consulta 1 — Vista base del proyecto (INNER JOIN)
