@@ -160,6 +160,16 @@ FROM ventas
 INNER JOIN clientes
     ON ventas.id_cliente = clientes.id_cliente;
 
+-- LA VERSIÓN SUGERIDA por la IA
+SELECT
+    V.FECHA_VENTA,
+    V.ID_CLIENTE,
+    C.NOMBRE
+FROM VENTAS AS V
+INNER JOIN CLIENTES AS C
+    ON V.ID_CLIENTE = C.ID_CLIENTE;
+
+
 --Consulta 2 — Clientes sin ventas (LEFT JOIN)
 SELECT
     clientes.nombre,
